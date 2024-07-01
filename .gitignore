@@ -164,10 +164,11 @@ cython_debug/
 users.py
 test.py
 webapp/config.py
+app/config.py
+config.py
 /alembic.ini
 /logs/
 /webapp/risk/okveds.xlsx
 /webapp/sellers.xlsx
 /env_new/
 /webapp/logs/
-!/app/config.py
