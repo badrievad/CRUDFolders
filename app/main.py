@@ -41,12 +41,15 @@ def delete_company_folder(company_id: str) -> None:
     """Удаляет папку сделки с id_{company_id}"""
     pattern: str = get_id_pattern(company_id)
     found: bool = False
-    for folder_path in glob.glob(pattern, recursive=True):
-        if os.path.isdir(folder_path):
-            shutil.rmtree(folder_path)
-            logging.info(f"Папка {folder_path} успешно удалена.")
-            found = True
-            break
+    try:
+        for folder_path in glob.glob(pattern, recursive=True):
+            if os.path.isdir(folder_path):
+                shutil.rmtree(folder_path)
+                logging.info(f"Папка {folder_path} успешно удалена.")
+                found = True
+                break
+    except PermissionError as e:
+        raise e
 
     if not found:
         logging.info(f"Папка с id_{company_id} не найдена.")
@@ -59,16 +62,21 @@ def update_to_archive_company_folder(company_id: str) -> None:
     """Добавляет в название папки тег (Архив)"""
     pattern: str = get_id_pattern(company_id)
     found: bool = False
-    for folder_path in glob.glob(pattern, recursive=True):
-        if os.path.isdir(folder_path):
-            folder_name = os.path.basename(folder_path)
-            parent_dir = os.path.dirname(folder_path)
-            new_folder_name = f"(Архив) {folder_name}"
-            new_folder_path = os.path.join(parent_dir, new_folder_name)
-            os.rename(folder_path, new_folder_path)
-            logging.info(f"Папка {folder_path} успешно обновлена до {new_folder_path}.")
-            found = True
-            break
+    try:
+        for folder_path in glob.glob(pattern, recursive=True):
+            if os.path.isdir(folder_path):
+                folder_name = os.path.basename(folder_path)
+                parent_dir = os.path.dirname(folder_path)
+                new_folder_name = f"(Архив) {folder_name}"
+                new_folder_path = os.path.join(parent_dir, new_folder_name)
+                os.rename(folder_path, new_folder_path)
+                logging.info(
+                    f"Папка {folder_path} успешно обновлена до {new_folder_path}."
+                )
+                found = True
+                break
+    except PermissionError as e:
+        raise e
 
     if not found:
         logging.info(f"Папка с id_{company_id} не найдена.")
@@ -81,16 +89,21 @@ def update_to_active_company_folder(company_id: str) -> None:
     """Удаляет из названия папки тег (Архив)"""
     pattern: str = get_id_pattern(company_id)
     found: bool = False
-    for folder_path in glob.glob(pattern, recursive=True):
-        if os.path.isdir(folder_path):
-            folder_name = os.path.basename(folder_path)
-            parent_dir = os.path.dirname(folder_path)
-            new_folder_name = folder_name.replace("(Архив) ", "")
-            new_folder_path = os.path.join(parent_dir, new_folder_name)
-            os.rename(folder_path, new_folder_path)
-            logging.info(f"Папка {folder_path} успешно обновлена до {new_folder_path}.")
-            found = True
-            break
+    try:
+        for folder_path in glob.glob(pattern, recursive=True):
+            if os.path.isdir(folder_path):
+                folder_name = os.path.basename(folder_path)
+                parent_dir = os.path.dirname(folder_path)
+                new_folder_name = folder_name.replace("(Архив) ", "")
+                new_folder_path = os.path.join(parent_dir, new_folder_name)
+                os.rename(folder_path, new_folder_path)
+                logging.info(
+                    f"Папка {folder_path} успешно обновлена до {new_folder_path}."
+                )
+                found = True
+                break
+    except PermissionError as e:
+        raise e
 
     if not found:
         logging.info(f"Папка с id_{company_id} не найдена.")
