@@ -76,6 +76,9 @@ def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
             if os.path.isdir(folder_path):
                 folder_name = os.path.basename(folder_path)
                 parent_dir = os.path.dirname(folder_path)
+                logging.info(parent_dir)
+                logging.info(folder_name)
+                logging.info(dl_number)
                 new_folder_name = f"(Архив) {folder_name.replace(dl_number, '')}"
                 new_folder_path = os.path.join(parent_dir, new_folder_name)
                 os.rename(folder_path, new_folder_path)
