@@ -16,6 +16,10 @@ class Company(BaseModel):
     dl_number: str
 
 
+class Dl(BaseModel):
+    dl_number: str
+
+
 def get_id_pattern(company_id: str) -> str:
     return os.path.join(BASE_PATH, f"*(id_{company_id})*")
 
@@ -130,12 +134,12 @@ def delete_folder(company_id: str) -> dict[str, str]:
 
 
 @app.put("/archive/{company_id}")
-def archive_folder(company_id: str) -> dict[str, str]:
-    update_to_archive_company_folder(company_id)
+def archive_folder(company_id: str, dl: Dl) -> dict[str, str]:
+    update_to_archive_company_folder(company_id, dl.dl_number)
     return {"message": "Папка успешно обновлена до архива."}
 
 
 @app.put("/activate/{company_id}")
-def activate_folder(company_id: str) -> dict[str, str]:
-    update_to_active_company_folder(company_id)
+def activate_folder(company_id: str, dl: Dl) -> dict[str, str]:
+    update_to_active_company_folder(company_id, dl.dl_number)
     return {"message": "Папка успешно обновлена до активного состояния."}
