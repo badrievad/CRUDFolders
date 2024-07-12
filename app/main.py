@@ -13,6 +13,7 @@ app = FastAPI()
 class Company(BaseModel):
     company_name: str
     company_id: str
+    dl_number: str
 
 
 def get_id_pattern(company_id: str) -> str:
