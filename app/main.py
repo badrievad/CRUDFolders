@@ -26,6 +26,8 @@ def create_company_folder(company_name: str, company_id: str, dl_number: str) ->
     )
     os.makedirs(main_dir, exist_ok=True)
 
+    logging.info(f"Папка {main_dir} успешно создана.")
+
     subdirectories: list = [
         "БКИ",
         "Договоры",
