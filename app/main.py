@@ -19,10 +19,14 @@ def get_id_pattern(company_id: str) -> str:
     return os.path.join(BASE_PATH, f"*(id_{company_id})*")
 
 
-def create_company_folder(company_name: str, company_id: str) -> None:
+def create_company_folder(company_name: str, company_id: str, dl_number: str) -> None:
     """Создает папку для сделки с id_{company_id}"""
-    main_dir: str = os.path.join(BASE_PATH, f"{company_name} (id_{company_id})")
+    main_dir: str = os.path.join(
+        BASE_PATH, f"{dl_number} {company_name} (id_{company_id})"
+    )
     os.makedirs(main_dir, exist_ok=True)
+
+    logging.info(f"Папка {main_dir} успешно создана.")
 
     subdirectories: list = [
         "БКИ",
@@ -114,7 +118,7 @@ def update_to_active_company_folder(company_id: str) -> None:
 
 @app.post("/create")
 def create_folder(company: Company) -> dict[str, str]:
-    create_company_folder(company.company_name, company.company_id)
+    create_company_folder(company.company_name, company.company_id, company.dl_number)
     return {"message": "Папка успешно создана."}
 
 
