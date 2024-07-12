@@ -63,7 +63,7 @@ def delete_company_folder(company_id: str) -> None:
         )
 
 
-def update_to_archive_company_folder(company_id: str) -> None:
+def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
     """Добавляет в название папки тег (Архив)"""
     pattern: str = get_id_pattern(company_id)
     found: bool = False
@@ -72,7 +72,7 @@ def update_to_archive_company_folder(company_id: str) -> None:
             if os.path.isdir(folder_path):
                 folder_name = os.path.basename(folder_path)
                 parent_dir = os.path.dirname(folder_path)
-                new_folder_name = f"(Архив) {folder_name}"
+                new_folder_name = f"(Архив) {folder_name.replace(dl_number, '')}"
                 new_folder_path = os.path.join(parent_dir, new_folder_name)
                 os.rename(folder_path, new_folder_path)
                 logging.info(
@@ -90,7 +90,7 @@ def update_to_archive_company_folder(company_id: str) -> None:
         )
 
 
-def update_to_active_company_folder(company_id: str) -> None:
+def update_to_active_company_folder(company_id: str, dl_number: str) -> None:
     """Удаляет из названия папки тег (Архив)"""
     pattern: str = get_id_pattern(company_id)
     found: bool = False
@@ -99,7 +99,7 @@ def update_to_active_company_folder(company_id: str) -> None:
             if os.path.isdir(folder_path):
                 folder_name = os.path.basename(folder_path)
                 parent_dir = os.path.dirname(folder_path)
-                new_folder_name = folder_name.replace("(Архив) ", "")
+                new_folder_name = f"{dl_number} {folder_name.replace("(Архив) ", "")}"
                 new_folder_path = os.path.join(parent_dir, new_folder_name)
                 os.rename(folder_path, new_folder_path)
                 logging.info(
