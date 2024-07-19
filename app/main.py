@@ -38,7 +38,7 @@ def activate_folder(company_id: str, dl: Dl) -> dict[str, str]:
 
 
 @app.get("/is_available")
-def is_available():
+def is_available() -> JSONResponse:
     try:
         service_available = True
         return JSONResponse(content={"available": service_available}, status_code=200)
