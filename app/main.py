@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 from .models import Company, Dl
 from .utils import (
@@ -34,3 +35,14 @@ def archive_folder(company_id: str, dl: Dl) -> dict[str, str]:
 def activate_folder(company_id: str, dl: Dl) -> dict[str, str]:
     update_to_active_company_folder(company_id, dl.dl_number)
     return {"message": "Папка успешно обновлена до активного состояния."}
+
+
+@app.get("/is_available")
+def is_available():
+    try:
+        service_available = True
+        return JSONResponse(content={"available": service_available}, status_code=200)
+    except Exception as e:
+        return JSONResponse(
+            content={"available": False, "error": str(e)}, status_code=500
+        )
