@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 
 from .models import Company, Dl
@@ -7,6 +7,7 @@ from .utils import (
     delete_company_folder,
     update_to_archive_company_folder,
     update_to_active_company_folder,
+    copy_comm_offer_to_folder,
 )
 
 
@@ -46,3 +47,9 @@ def is_available() -> JSONResponse:
         return JSONResponse(
             content={"available": False, "error": str(e)}, status_code=500
         )
+
+
+@app.post("/commercial-offer/upload")
+def upload_commercial_offer(company_id: str, file: UploadFile = File(...)):
+    copy_comm_offer_to_folder(company_id, file)
+    return {"message": "File uploaded successfully"}

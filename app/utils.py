@@ -4,7 +4,7 @@ import shutil
 
 from .config import BASE_PATH
 from .logger import logging
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile, File
 
 
 def get_id_pattern(company_id: str) -> str:
@@ -100,6 +100,49 @@ def update_to_active_company_folder(company_id: str, dl_number: str) -> None:
                 )
                 found = True
                 break
+    except PermissionError as e:
+        raise e
+
+    if not found:
+        logging.info(f"Папка с id_{company_id} не найдена.")
+        raise HTTPException(
+            status_code=404, detail=f"Папка с id_{company_id} не найдена."
+        )
+
+
+def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> None:
+    """Копирует коммерческое предложение в папку сделки"""
+
+    pattern: str = get_id_pattern(company_id)
+    found: bool = False
+
+    try:
+        for folder_path in glob.glob(pattern, recursive=True):
+            if os.path.isdir(folder_path):
+                parent_dir = os.path.dirname(folder_path)
+                commercial_offer_path = os.path.join(parent_dir, "Расчет и КП")
+
+                # Убедитесь, что папка назначения существует
+                os.makedirs(commercial_offer_path, exist_ok=True)
+
+                # Получаем оригинальное имя файла
+                original_filename = file.filename
+
+                # Сохраняем файл в целевую папку
+                destination_file_path = os.path.join(
+                    commercial_offer_path, original_filename
+                )
+
+                # Сохраняем файл
+                with open(destination_file_path, "wb") as buffer:
+                    shutil.copyfileobj(file.file, buffer)
+
+                logging.info(
+                    f"Successfully saved {file.filename} to {destination_file_path}"
+                )
+                found = True
+                break
+
     except PermissionError as e:
         raise e
 
