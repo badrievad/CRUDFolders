@@ -26,7 +26,7 @@ def create_company_folder(company_name: str, company_id: str, dl_number: str) ->
         "Документы клиента",
         "Документы продавца",
         "Заключение",
-        "Расчет",
+        "Расчет и КП",
     ]
 
     for subdirectory in subdirectories:
