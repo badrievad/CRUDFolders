@@ -143,7 +143,8 @@ def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> 
                 found = True
                 break
 
-    except PermissionError as e:
+    except Exception as e:
+        logging.info(f"Произошла ошибка: {e}")
         raise e
 
     if not found:
