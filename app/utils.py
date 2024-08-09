@@ -119,8 +119,11 @@ def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> 
     try:
         for folder_path in glob.glob(pattern, recursive=True):
             if os.path.isdir(folder_path):
+                folder_name = os.path.basename(folder_path)
                 parent_dir = os.path.dirname(folder_path)
-                commercial_offer_path = os.path.join(parent_dir, "Расчет и КП")
+                commercial_offer_path = os.path.join(
+                    parent_dir, folder_name, "Расчет и КП"
+                )
 
                 # Убедитесь, что папка назначения существует
                 os.makedirs(commercial_offer_path, exist_ok=True)
@@ -133,12 +136,14 @@ def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> 
                     commercial_offer_path, original_filename
                 )
 
+                logging.info(f"Saving {original_filename} to {destination_file_path}")
+
                 # Сохраняем файл
                 with open(destination_file_path, "wb") as buffer:
                     shutil.copyfileobj(file.file, buffer)
 
                 logging.info(
-                    f"Successfully saved {file.filename} to {destination_file_path}"
+                    f"Successfully saved {original_filename} to {destination_file_path}"
                 )
                 found = True
                 break

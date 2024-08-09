@@ -1,4 +1,6 @@
-from fastapi import FastAPI, UploadFile, File
+from .logger import logging
+
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 
 from .models import Company, Dl
@@ -50,6 +52,10 @@ def is_available() -> JSONResponse:
 
 
 @app.post("/commercial-offer/upload")
-def upload_commercial_offer(company_id: str, file: UploadFile = File(...)):
+def upload_commercial_offer(
+    company_id: str = Form(...), file: UploadFile = File(...)
+) -> dict[str, str]:
+    logging.info(f"Company ID: {company_id}")
+    logging.info(f"File: {file.filename}")
     copy_comm_offer_to_folder(company_id, file)
     return {"message": "File uploaded successfully"}
