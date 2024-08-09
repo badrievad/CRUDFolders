@@ -68,5 +68,4 @@ def create_commercial_offer(
 ) -> dict[str, str]:
     path_to_offer: str = create_comm_offer(file, user_login)
     response = {"message": "File created successfully", "path_to_file": path_to_offer}
-    logging.info(response)
     return response
