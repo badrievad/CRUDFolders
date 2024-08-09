@@ -2,9 +2,9 @@ import os
 import glob
 import shutil
 
-from .config import BASE_PATH
+from .config import BASE_PATH, COMMERCIAL_OFFER_PATH
 from .logger import logging
-from fastapi import HTTPException, UploadFile, File
+from fastapi import HTTPException, UploadFile, File, Form
 
 
 def get_id_pattern(company_id: str) -> str:
@@ -157,3 +157,27 @@ def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> 
         raise HTTPException(
             status_code=404, detail=f"Папка с id_{company_id} не найдена."
         )
+
+
+def create_comm_offer(file: UploadFile = File(...), user_login: str = Form(...)) -> str:
+    """Создает коммерческое предложение"""
+    user_directory = os.path.join(COMMERCIAL_OFFER_PATH, user_login)
+    path_to_offer = os.path.join(user_directory, file.filename)
+
+    try:
+        # Создание директории, если она не существует
+        os.makedirs(user_directory, exist_ok=True)
+
+        # Сохранение файла
+        with open(path_to_offer, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+    except OSError as e:
+        # Обработка ошибок, связанных с файловой системой
+        raise HTTPException(status_code=500, detail=f"Ошибка при создании файла: {e}")
+
+    except Exception as e:
+        # Обработка других непредвиденных ошибок
+        raise HTTPException(status_code=500, detail=f"Произошла ошибка: {e}")
+
+    return path_to_offer

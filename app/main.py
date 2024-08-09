@@ -10,6 +10,7 @@ from .utils import (
     update_to_archive_company_folder,
     update_to_active_company_folder,
     copy_comm_offer_to_folder,
+    create_comm_offer,
 )
 
 
@@ -59,3 +60,13 @@ def upload_commercial_offer(
     logging.info(f"File: {file.filename}")
     copy_comm_offer_to_folder(company_id, file)
     return {"message": "File uploaded successfully"}
+
+
+@app.post("/commercial-offer/create")
+def create_commercial_offer(
+    file: UploadFile = File(...), user_login: str = Form(...)
+) -> dict[str, str]:
+    path_to_offer: str = create_comm_offer(file, user_login)
+    response = {"message": "File created successfully", "path_to_file": path_to_offer}
+    logging.info(response)
+    return response
