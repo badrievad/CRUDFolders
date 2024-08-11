@@ -9,3 +9,8 @@ class Company(BaseModel):
 
 class Dl(BaseModel):
     dl_number: str
+
+
+class CommercialOffer(BaseModel):
+    company_id: str
+    file_path: str

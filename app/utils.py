@@ -110,7 +110,7 @@ def update_to_active_company_folder(company_id: str, dl_number: str) -> None:
         )
 
 
-def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> None:
+def copy_comm_offer_to_folder(company_id: str, file_path: str) -> None:
     """Копирует коммерческое предложение в папку сделки"""
 
     pattern: str = get_id_pattern(company_id)
@@ -125,31 +125,30 @@ def copy_comm_offer_to_folder(company_id: str, file: UploadFile = File(...)) -> 
                     parent_dir, folder_name, "Расчет и КП"
                 )
 
-                # Убедитесь, что папка назначения существует
+                # Нужно убедиться, что папка назначения существует
                 os.makedirs(commercial_offer_path, exist_ok=True)
 
-                # Получаем оригинальное имя файла
-                original_filename = file.filename
+                # Получаем оригинальное имя файла из переданного пути
+                original_filename = os.path.basename(file_path)
 
-                # Сохраняем файл в целевую папку
+                # Формируем целевой путь для копирования файла
                 destination_file_path = os.path.join(
                     commercial_offer_path, original_filename
                 )
 
-                logging.info(f"Saving {original_filename} to {destination_file_path}")
+                logging.info(f"Copying {original_filename} to {destination_file_path}")
 
-                # Сохраняем файл
-                with open(destination_file_path, "wb") as buffer:
-                    shutil.copyfileobj(file.file, buffer)
+                # Копируем файл в целевую папку
+                shutil.copy(file_path, destination_file_path)
 
                 logging.info(
-                    f"Successfully saved {original_filename} to {destination_file_path}"
+                    f"Successfully copied {original_filename} to {destination_file_path}"
                 )
                 found = True
                 break
 
     except Exception as e:
-        logging.info(f"Произошла ошибка: {e}")
+        logging.error(f"Произошла ошибка: {e}")
         raise e
 
     if not found:

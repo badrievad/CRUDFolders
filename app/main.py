@@ -1,9 +1,8 @@
-from .logger import logging
-
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 
-from .models import Company, Dl
+from .logger import logging
+from .models import Company, Dl, CommercialOffer
 from .utils import (
     create_company_folder,
     delete_company_folder,
@@ -53,12 +52,10 @@ def is_available() -> JSONResponse:
 
 
 @app.post("/commercial-offer/upload")
-def upload_commercial_offer(
-    company_id: str = Form(...), file: UploadFile = File(...)
-) -> dict[str, str]:
-    logging.info(f"Company ID: {company_id}")
-    logging.info(f"File: {file.filename}")
-    copy_comm_offer_to_folder(company_id, file)
+def upload_commercial_offer(offer: CommercialOffer) -> dict[str, str]:
+    logging.info(f"Company ID: {offer.company_id}")
+    logging.info(f"File path: {offer.file_path}")
+    copy_comm_offer_to_folder(offer.company_id, offer.file_path)
     return {"message": "File uploaded successfully"}
 
 
@@ -69,3 +66,9 @@ def create_commercial_offer(
     path_to_offer: str = create_comm_offer(file, user_login)
     response = {"message": "File created successfully", "path_to_file": path_to_offer}
     return response
+
+
+# @app.get("/commercial-offer/download")
+# def download_commercial_offer(culculation_id: str) -> FileResponse:
+#     download_file(culculation_id)
+#     return FileResponse(full_download_path)
