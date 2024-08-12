@@ -14,3 +14,7 @@ class Dl(BaseModel):
 class CommercialOffer(BaseModel):
     company_id: str
     file_path: str
+
+
+class PathToOffer(BaseModel):
+    file_path: str

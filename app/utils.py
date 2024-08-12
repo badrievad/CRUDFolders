@@ -2,6 +2,7 @@ import os
 import glob
 import shutil
 
+from pathlib import Path
 from .config import BASE_PATH, COMMERCIAL_OFFER_PATH
 from .logger import logging
 from fastapi import HTTPException, UploadFile, File, Form
@@ -182,4 +183,20 @@ def create_comm_offer(file: UploadFile = File(...), user_login: str = Form(...))
     return path_to_offer
 
 
-def download_file(file_path: str) -> str: ...
+def download_file(file_path: str) -> bytes:
+    """
+    Функция для чтения и возвращения содержимого файла.
+
+    :param file_path: Путь к файлу.
+    :return: Содержимое файла в виде байтов.
+    :raises FileNotFoundError: Если файл не найден.
+    """
+    path = Path(file_path)
+
+    if not path.exists() or not path.is_file():
+        raise FileNotFoundError(f"File not found at path: {file_path}")
+
+    with path.open("rb") as file:
+        file_content = file.read()
+
+    return file_content
