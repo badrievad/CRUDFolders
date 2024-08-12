@@ -18,8 +18,10 @@ app = FastAPI()
 
 @app.post("/create")
 def create_folder(company: Company) -> dict[str, str]:
-    create_company_folder(company.company_name, company.company_id, company.dl_number)
-    return {"message": "Папка успешно создана."}
+    path_to_folder = create_company_folder(
+        company.company_name, company.company_id, company.dl_number
+    )
+    return {"message": "Папка успешно создана.", "path_to_folder": path_to_folder}
 
 
 @app.delete("/delete/{company_id}")

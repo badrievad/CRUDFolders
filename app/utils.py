@@ -11,7 +11,7 @@ def get_id_pattern(company_id: str) -> str:
     return os.path.join(BASE_PATH, f"*(id_{company_id})*")
 
 
-def create_company_folder(company_name: str, company_id: str, dl_number: str) -> None:
+def create_company_folder(company_name: str, company_id: str, dl_number: str) -> str:
     """Создает папку для сделки с id_{company_id}"""
     main_dir: str = os.path.join(
         BASE_PATH, f"{dl_number} {company_name} (id_{company_id})"
@@ -31,6 +31,8 @@ def create_company_folder(company_name: str, company_id: str, dl_number: str) ->
 
     for subdirectory in subdirectories:
         os.makedirs(os.path.join(main_dir, subdirectory), exist_ok=True)
+
+    return main_dir
 
 
 def delete_company_folder(company_id: str) -> None:
