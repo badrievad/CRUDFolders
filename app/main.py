@@ -1,12 +1,8 @@
-from io import BytesIO
-from pathlib import Path
-from urllib.parse import quote
-
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse
 
 from .logger import logging
-from .models import Company, Dl, CommercialOffer, PathToOffer
+from .models import Company, Dl, CommercialOffer
 from .utils import (
     create_company_folder,
     delete_company_folder,
@@ -14,7 +10,6 @@ from .utils import (
     update_to_active_company_folder,
     copy_comm_offer_to_folder,
     create_comm_offer,
-    download_file,
 )
 
 
@@ -71,19 +66,3 @@ def create_commercial_offer(
     path_to_offer: str = create_comm_offer(file, user_login)
     response = {"message": "File created successfully", "path_to_file": path_to_offer}
     return response
-
-
-@app.post("/commercial-offer/download")
-def download_commercial_offer(file: PathToOffer) -> StreamingResponse:
-    file_content = download_file(file.file_path)
-    file_name = Path(file.file_path).name  # Извлечение имени файла из пути
-
-    # Кодируем имя файла в UTF-8 и подготавливаем заголовок
-    encoded_file_name = quote(file_name)
-    content_disposition = f"attachment; filename*=UTF-8''{encoded_file_name}"
-
-    return StreamingResponse(
-        BytesIO(file_content),
-        media_type="application/octet-stream",
-        headers={"Content-Disposition": content_disposition},
-    )
