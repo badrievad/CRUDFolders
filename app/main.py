@@ -1,5 +1,6 @@
 from io import BytesIO
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -76,10 +77,13 @@ def create_commercial_offer(
 def download_commercial_offer(file: PathToOffer) -> StreamingResponse:
     file_content = download_file(file.file_path)
     file_name = Path(file.file_path).name  # Извлечение имени файла из пути
-    logging.info(f"File name: {file_name}")
+
+    # Кодируем имя файла в UTF-8 и подготавливаем заголовок
+    encoded_file_name = quote(file_name)
+    content_disposition = f"attachment; filename*=UTF-8''{encoded_file_name}"
 
     return StreamingResponse(
         BytesIO(file_content),
         media_type="application/octet-stream",
-        headers={"Content-Disposition": f"attachment; filename={file_name}"},
+        headers={"Content-Disposition": content_disposition},
     )
