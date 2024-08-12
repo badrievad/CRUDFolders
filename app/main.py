@@ -35,7 +35,7 @@ def archive_folder(company_id: str, dl: Dl) -> dict[str, str]:
     path_to_offer = update_to_archive_company_folder(company_id, dl.dl_number)
     return {
         "message": "Папка успешно обновлена до архива.",
-        "path_to_file": path_to_offer,
+        "path_to_folder": path_to_offer,
     }
 
 
@@ -44,7 +44,7 @@ def activate_folder(company_id: str, dl: Dl) -> dict[str, str]:
     path_to_offer = update_to_active_company_folder(company_id, dl.dl_number)
     return {
         "message": "Папка успешно обновлена до активного состояния.",
-        "path_to_file": path_to_offer,
+        "path_to_folder": path_to_offer,
     }
 
 
