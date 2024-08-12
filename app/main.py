@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 
 from .logger import logging
 from .models import Company, Dl, CommercialOffer
@@ -10,6 +10,7 @@ from .utils import (
     update_to_active_company_folder,
     copy_comm_offer_to_folder,
     create_comm_offer,
+    download_file,
 )
 
 
@@ -68,7 +69,7 @@ def create_commercial_offer(
     return response
 
 
-# @app.get("/commercial-offer/download")
-# def download_commercial_offer(culculation_id: str) -> FileResponse:
-#     download_file(culculation_id)
-#     return FileResponse(full_download_path)
+@app.post("/commercial-offer/download")
+def download_commercial_offer(calculation_id: str) -> FileResponse:
+    full_download_path = download_file(calculation_id)
+    return FileResponse(full_download_path)

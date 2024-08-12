@@ -65,7 +65,7 @@ def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
                 parent_dir = os.path.dirname(folder_path)
                 logging.info(folder_name)
                 logging.info(dl_number)
-                new_folder_name = f"(Архив){folder_name.replace(dl_number, '')}"
+                new_folder_name = f"(Архив) {folder_name.replace(dl_number, '')}"
                 new_folder_path = os.path.join(parent_dir, new_folder_name)
                 os.rename(folder_path, new_folder_path)
                 logging.info(
@@ -180,3 +180,6 @@ def create_comm_offer(file: UploadFile = File(...), user_login: str = Form(...))
         raise HTTPException(status_code=500, detail=f"Произошла ошибка: {e}")
 
     return path_to_offer
+
+
+def download_file(file_path: str) -> str: ...
