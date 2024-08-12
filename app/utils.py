@@ -13,6 +13,7 @@ def get_id_pattern(company_id: str) -> str:
 
 def create_company_folder(company_name: str, company_id: str, dl_number: str) -> str:
     """Создает папку для сделки с id_{company_id}"""
+
     main_dir: str = os.path.join(
         BASE_PATH, f"{dl_number} {company_name} (id_{company_id})"
     )
@@ -37,6 +38,7 @@ def create_company_folder(company_name: str, company_id: str, dl_number: str) ->
 
 def delete_company_folder(company_id: str) -> None:
     """Удаляет папку сделки с id_{company_id}"""
+
     pattern: str = get_id_pattern(company_id)
     found: bool = False
     try:
@@ -56,8 +58,9 @@ def delete_company_folder(company_id: str) -> None:
         )
 
 
-def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
+def update_to_archive_company_folder(company_id: str, dl_number: str) -> str:
     """Добавляет в название папки тег (Архив)"""
+
     pattern: str = get_id_pattern(company_id)
     found: bool = False
     try:
@@ -73,8 +76,7 @@ def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
                 logging.info(
                     f"Папка {folder_path} успешно обновлена до {new_folder_path}."
                 )
-                found = True
-                break
+                return new_folder_path
     except PermissionError as e:
         raise e
 
@@ -85,8 +87,9 @@ def update_to_archive_company_folder(company_id: str, dl_number: str) -> None:
         )
 
 
-def update_to_active_company_folder(company_id: str, dl_number: str) -> None:
+def update_to_active_company_folder(company_id: str, dl_number: str) -> str:
     """Удаляет из названия папки тег (Архив)"""
+
     pattern: str = get_id_pattern(company_id)
     found: bool = False
     try:
@@ -100,8 +103,7 @@ def update_to_active_company_folder(company_id: str, dl_number: str) -> None:
                 logging.info(
                     f"Папка {folder_path} успешно обновлена до {new_folder_path}."
                 )
-                found = True
-                break
+                return new_folder_path
     except PermissionError as e:
         raise e
 
@@ -162,6 +164,7 @@ def copy_comm_offer_to_folder(company_id: str, file_path: str) -> None:
 
 def create_comm_offer(file: UploadFile = File(...), user_login: str = Form(...)) -> str:
     """Создает коммерческое предложение"""
+
     user_directory = os.path.join(COMMERCIAL_OFFER_PATH, user_login)
     path_to_offer = os.path.join(user_directory, file.filename)
 

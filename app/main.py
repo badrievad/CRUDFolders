@@ -32,14 +32,20 @@ def delete_folder(company_id: str) -> dict[str, str]:
 
 @app.put("/archive/{company_id}")
 def archive_folder(company_id: str, dl: Dl) -> dict[str, str]:
-    update_to_archive_company_folder(company_id, dl.dl_number)
-    return {"message": "Папка успешно обновлена до архива."}
+    path_to_offer = update_to_archive_company_folder(company_id, dl.dl_number)
+    return {
+        "message": "Папка успешно обновлена до архива.",
+        "path_to_file": path_to_offer,
+    }
 
 
 @app.put("/activate/{company_id}")
 def activate_folder(company_id: str, dl: Dl) -> dict[str, str]:
-    update_to_active_company_folder(company_id, dl.dl_number)
-    return {"message": "Папка успешно обновлена до активного состояния."}
+    path_to_offer = update_to_active_company_folder(company_id, dl.dl_number)
+    return {
+        "message": "Папка успешно обновлена до активного состояния.",
+        "path_to_file": path_to_offer,
+    }
 
 
 @app.get("/is_available")
