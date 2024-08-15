@@ -72,6 +72,6 @@ def upload_commercial_offer(offer: CommercialOffer) -> dict[str, str]:
 def create_commercial_offer(
     file: UploadFile = File(...), user_login: str = Form(...)
 ) -> dict[str, str]:
-    path_to_offer: str = create_comm_offer(file, user_login)
-    response = {"message": "File created successfully", "path_to_file": path_to_offer}
+    path_to_xlsx: str = create_comm_offer(file, user_login)
+    response = {"message": "File created successfully", "path_to_xlsx": path_to_xlsx}
     return response
