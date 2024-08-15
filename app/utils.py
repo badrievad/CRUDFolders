@@ -114,7 +114,7 @@ def update_to_active_company_folder(company_id: str, dl_number: str) -> str:
         )
 
 
-def copy_comm_offer_to_folder(company_id: str, file_path: str) -> None:
+def copy_comm_offer_to_folder(company_id: str, xlsx_path: str, pdf_path: str) -> None:
     """Копирует коммерческое предложение в папку сделки"""
 
     pattern: str = get_id_pattern(company_id)
@@ -125,29 +125,30 @@ def copy_comm_offer_to_folder(company_id: str, file_path: str) -> None:
             if os.path.isdir(folder_path):
                 folder_name = os.path.basename(folder_path)
                 parent_dir = os.path.dirname(folder_path)
-                commercial_offer_path = os.path.join(
-                    parent_dir, folder_name, "Расчет и КП"
-                )
 
+                # Определяем путь куда нужно скопировать файлы
+                destination_path = os.path.join(parent_dir, folder_name, "Расчет и КП")
                 # Нужно убедиться, что папка назначения существует
-                os.makedirs(commercial_offer_path, exist_ok=True)
+                os.makedirs(destination_path, exist_ok=True)
 
-                # Получаем оригинальное имя файла из переданного пути
-                original_filename = os.path.basename(file_path)
+                # Получаем оригинальные имена файлов из переданного пути
+                xlsx_filename = os.path.basename(xlsx_path)
+                pdf_filename = os.path.basename(pdf_path)
 
                 # Формируем целевой путь для копирования файла
-                destination_file_path = os.path.join(
-                    commercial_offer_path, original_filename
-                )
+                xlsx_file_path = os.path.join(destination_path, xlsx_filename)
+                pdf_file_path = os.path.join(destination_path, pdf_filename)
 
-                logging.info(f"Copying {original_filename} to {destination_file_path}")
+                logging.info(f"Copying {xlsx_filename} to {xlsx_file_path}")
+                logging.info(f"Copying {pdf_filename} to {pdf_file_path}")
 
                 # Копируем файл в целевую папку
-                shutil.copy(file_path, destination_file_path)
+                shutil.copy(xlsx_path, xlsx_file_path)
+                shutil.copy(pdf_path, pdf_file_path)
 
-                logging.info(
-                    f"Successfully copied {original_filename} to {destination_file_path}"
-                )
+                logging.info(f"Successfully copied {xlsx_filename} to {xlsx_file_path}")
+                logging.info(f"Successfully copied {pdf_filename} to {pdf_file_path}")
+
                 found = True
                 break
 

@@ -62,9 +62,10 @@ def is_available() -> JSONResponse:
 @app.post("/commercial-offer/upload")
 def upload_commercial_offer(offer: CommercialOffer) -> dict[str, str]:
     logging.info(f"Company ID: {offer.company_id}")
-    logging.info(f"File path: {offer.file_path}")
-    copy_comm_offer_to_folder(offer.company_id, offer.file_path)
-    return {"message": "File uploaded successfully"}
+    logging.info(f"Xlsx path: {offer.xlsx_path}")
+    logging.info(f"Pdf path: {offer.pdf_path}")
+    copy_comm_offer_to_folder(offer.company_id, offer.xlsx_path, offer.pdf_path)
+    return {"message": "Files uploaded successfully"}
 
 
 @app.post("/commercial-offer/create")
