@@ -81,6 +81,7 @@ def create_commercial_offer(
 
 @app.post("/commercial-offer/download")
 def download_commercial_offer(pdf: PdfPath) -> FileResponse:
+    logging.info(f"Received pdf_path: {pdf}")
     # Создаем объект Path
     file_path = Path(pdf.path_to_pdf)
 
@@ -90,6 +91,8 @@ def download_commercial_offer(pdf: PdfPath) -> FileResponse:
 
     # Извлекаем имя файла
     file_name = file_path.name
+
+    logging.info(f"File name: {file_name}")
 
     return FileResponse(
         path=file_path,
