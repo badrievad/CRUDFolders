@@ -15,3 +15,7 @@ class CommercialOffer(BaseModel):
     company_id: str
     xlsx_path: str
     pdf_path: str
+
+
+class PdfPath(BaseModel):
+    path: str

@@ -1,8 +1,10 @@
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import JSONResponse
+from pathlib import Path
+
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi.responses import JSONResponse, FileResponse
 
 from .logger import logging
-from .models import Company, Dl, CommercialOffer
+from .models import Company, Dl, CommercialOffer, PdfPath
 from .utils import (
     create_company_folder,
     delete_company_folder,
@@ -75,3 +77,22 @@ def create_commercial_offer(
     path_to_xlsx: str = create_comm_offer(file, user_login)
     response = {"message": "File created successfully", "path_to_xlsx": path_to_xlsx}
     return response
+
+
+@app.post("/commercial-offer/download")
+def download_commercial_offer(pdf: PdfPath) -> FileResponse:
+    # Создаем объект Path
+    file_path = Path(pdf.path)
+
+    # Проверяем, существует ли файл
+    if not file_path.exists() or not file_path.is_file():
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # Извлекаем имя файла
+    file_name = file_path.name
+
+    return FileResponse(
+        file_path,
+        media_type="application/pdf",
+        filename=file_name,
+    )
