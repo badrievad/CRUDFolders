@@ -18,4 +18,4 @@ class CommercialOffer(BaseModel):
 
 
 class PdfPath(BaseModel):
-    path: str
+    path_to_pdf: str

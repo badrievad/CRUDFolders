@@ -82,7 +82,7 @@ def create_commercial_offer(
 @app.post("/commercial-offer/download")
 def download_commercial_offer(pdf: PdfPath) -> FileResponse:
     # Создаем объект Path
-    file_path = Path(pdf.path)
+    file_path = Path(pdf.path_to_pdf)
 
     # Проверяем, существует ли файл
     if not file_path.exists() or not file_path.is_file():
