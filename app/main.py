@@ -92,7 +92,7 @@ def download_commercial_offer(pdf: PdfPath) -> FileResponse:
     file_name = file_path.name
 
     return FileResponse(
-        file_path,
+        path=file_path,
         media_type="application/pdf",
         filename=file_name,
     )
